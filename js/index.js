@@ -5,9 +5,10 @@ window.onload = () => {
 
   function startGame() {
     addImgRoad();
-    addCar();
   }
 };
+
+const obstacles = [];
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
@@ -18,10 +19,44 @@ function addImgRoad () {
   ctx.drawImage(imgRoad, 0, 0, 500, 700)
 }
 
-function addCar () {
-  imgCar = new Image();
-  imgCar.src = "../images/car.png";
-  ctx.drawImage(imgCar, 225, 600, 50, 100)
+class Car {
+  constructor() {
+    this.x = 225;
+    this.y = 600;
+
+    const imgObj = new Image();
+    imgObj.addEventListener('load', () => {
+      this.img = imgObj;
+      this.draw();
+    });
+    imgObj.src = "../images/car.png"
+  }
+  moveLeft() {
+    this.x -= 10;
+  }
+  moveRight() {
+    this.x += 10;
+  }
+  draw() {
+    ctx.drawImage(this.img, this.x, this.y, 50, 100)
+  }
+}
+
+const car = new Car();
+
+document.addEventListener('keydown', (e) => {
+  if (e.code === "ArrowLeft") {
+    car.moveLeft();
+  } else if (e.code === "ArrowRight") {
+    car.moveRight();
+  }
+  updateCanvas();
+})
+
+function updateCanvas() {
+  ctx.clearRect(0, 0, 500, 700);
+  addImgRoad();
+  car.draw();
 }
 /* 
 document.addEventListener('keydown', (e) => {
